@@ -6,9 +6,12 @@
 > Bibbly has to brave the asteroids of the furry-way galaxy to get to his destination. He needs your help to steer the spaceship and get to planet carroton safely.
 > Everytime Bibbly runs into an asteroid, one of his bunny budddies get injured and will float into endless space, wishing they never trusted Bibbly in the first place....
 
-### Instructions :
+### How to run :
 Open the directory as an IntelliJ project, and run the main method in SpaceBunny.
 If you get errors, try right-clicking the file pom.xml and clicking Add as Maven project.
 
+### How to play:
+1. Press the arrow up and arrow down keys to avoid the asteroids and get to the destination
+2. You have two chances to get there ! Don't let all the bunnies die :(
 
 _ps. our time zone is (GMT +8)_
