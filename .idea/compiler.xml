@@ -7,9 +7,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="RocketBunny" />
+        <module name="bagel" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="bagel" target="11" />
       <module name="RocketBunny" target="11" />
     </bytecodeTargetLevel>
   </component>
