@@ -7,7 +7,7 @@
 > Everytime Bibbly runs into an asteroid, one of his bunny budddies get injured and will float into endless space, wishing they never trusted Bibbly in the first place....
 
 ### How to run :
-Open the directory as an IntelliJ project, and run the main method in SpaceBunny.
+Open the directory as an IntelliJ project, and run the main method in SpaceBunnies.
 If you get errors, try right-clicking the file pom.xml and clicking Add as Maven project.
 
 ### How to play:
