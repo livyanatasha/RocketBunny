@@ -16,7 +16,7 @@ public class Ship {
 
     /* constructor to initialize value */
     public Ship() {
-        x = 0;
+        x = 1024;
         y = 348;
         image = new Image(THREE_LIFE_FILE);
         condition = THREE_LIFE;
@@ -55,8 +55,12 @@ public class Ship {
         return condition;
     }
 
-    public void shift() {
-        x = x + RocketBunny.PER_PIXEL;
+    public void shift(String back) {
+        if (back == "back") {
+            x = x - RocketBunny.PER_PIXEL;
+        } else {
+            x = x + RocketBunny.PER_PIXEL;
+        }
     }
 
     public void move(int x, int y) {

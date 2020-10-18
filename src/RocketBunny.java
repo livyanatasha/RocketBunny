@@ -15,12 +15,12 @@ public class RocketBunny extends AbstractGame {
     private final int tickRate = 500;
     private long lastUpdateMills = 0;
     private Boolean wasHit = false;
-    private final Font word = new Font("res/8-BIT WONDER.TTF", 500);
+    private int tick = -1;
+    private final Font word = new Font("res/8-BIT-WONDER.TTF", 50);
 
     public RocketBunny() {
         super(1024, 768, "Rocket Bunny");
         loadMap();
-        intro();
     }
 
     public static void main(String[] args) {
@@ -73,27 +73,6 @@ public class RocketBunny extends AbstractGame {
 
     }
 
-    public void intro() {
-        for (int i=0; i<4; i++) {
-            long timeBegin = currentTimeMillis();
-            while (tickRate != (currentTimeMillis() - timeBegin));
-            for (Actor actor : actorList) {
-                actor.shift();
-            }
-            ship.shift();
-
-            /* render images */
-            for (Actor actor : actorList) {
-                actor.render();
-            }
-            ship.render();
-        }
-    }
-
-    public void finale() {
-
-    }
-
     @Override
     protected void update(Input input) {
         Boolean status = false;
@@ -111,42 +90,57 @@ public class RocketBunny extends AbstractGame {
         long thisUpdateMills = currentTimeMillis();
         if (thisUpdateMills - lastUpdateMills > tickRate) {
             /* move actors */
-            for (Actor actor : actorList) {
-                actor.shift();
+            if (actorList.get(0).getX() >= -1728) {
+                for (Actor actor : actorList) {
+                    actor.shift();
+                }
             }
-            lastUpdateMills = thisUpdateMills;
 
+            /* update the tick accordingly */
+            if (tick < 13) {
+                ship.shift("back");
+                tick++;
+            } else if (tick < 15) {
+                ship.shift("front");
+                tick++;
+            } else if (tick > 19) {
+                Window.close();
+            }
+
+            if (ship.getCondition() == 0 || (actorList.get(0).getX() <= -1728)) {
+                tick++;
+            }
 
             /* check if hit asteroid */
-            for (Actor actor : actorList) {
-                if (actor instanceof AsteroidLarge) {
-                    status = ship.checkSurrounding(ship, actor, 64);
-                } else if (actor instanceof AsteroidSmall) {
-                    status = ship.checkSurrounding(ship, actor, 32);
-                } else {
-                    status = false;
+            if (ship.getCondition() != 0) {
+                for (Actor actor : actorList) {
+                    if (actor instanceof AsteroidLarge) {
+                        status = ship.checkSurrounding(ship, actor, 64);
+                    } else if (actor instanceof AsteroidSmall) {
+                        status = ship.checkSurrounding(ship, actor, 32);
+                    } else {
+                        status = false;
+                    }
+
+                    if (status) {
+                        break;
+                    }
                 }
 
+
+                /* update the status */
                 if (status) {
-                    break;
+                    if (wasHit == false) {
+                        ship.crash();
+                        wasHit = true;
+                    }
+                } else {
+                    if (wasHit) {
+                        wasHit = false;
+                    }
                 }
             }
-
-            /* update the status */
-            if (status) {
-                if (wasHit == false) {
-                    ship.crash();
-                    wasHit = true;
-                }
-            } else {
-                if (wasHit) {
-                    wasHit = false;
-                }
-            }
-        }
-
-        if (ship.getCondition() == 0) {
-            word.drawString("The end", 0, 0);
+            lastUpdateMills = thisUpdateMills;
         }
 
         /* render images */
@@ -155,5 +149,13 @@ public class RocketBunny extends AbstractGame {
         }
         ship.render();
 
+        /* add text */
+        if (tick < 5) {
+            word.drawString("Avoid the asteroid", 100, 348);
+        } else if (actorList.get(0).getX() <= -1728){
+            word.drawString("Made it", 400, 348);
+        } else if (ship.getCondition() == 0) {
+            word.drawString("NoBunny Left", 200, 348);
+        }
     }
 }
