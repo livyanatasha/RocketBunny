@@ -14,6 +14,7 @@ public class RocketBunny extends AbstractGame {
     private int tickRate = 500;
     private int tick = 0;
     private Image background = new Image("res/image/galaxyPlanet.png");
+    private long lastUpdateMills = 0;
 
     public RocketBunny() {
         super(1024, 768, "Rocket Bunny");
@@ -94,6 +95,7 @@ public class RocketBunny extends AbstractGame {
 
     @Override
     protected void update(Input input) {
+        Boolean status = false;
         /* check input and move accordingly */
         if (input.wasPressed(Keys.ESCAPE)) {
             Window.close();
@@ -103,12 +105,27 @@ public class RocketBunny extends AbstractGame {
             ship.move(0, PER_PIXEL);
         }
 
-        long timeBegin = currentTimeMillis();
-        while (tickRate != (currentTimeMillis() - timeBegin));
-        
-        /* move actors */
+        /* shift background and asteroid every 500 ms */
+        long thisUpdateMills = currentTimeMillis();
+        if (thisUpdateMills - lastUpdateMills > tickRate) {
+            /* move actors */
+            for (Actor actor : actorList) {
+                actor.shift();
+            }
+            lastUpdateMills = thisUpdateMills;
+        }
+
+        /* check if hit asteroid */
         for (Actor actor : actorList) {
-            actor.shift();
+            if (actor instanceof AsteroidLarge) {
+                status = ship.checkSurrounding(ship, actor, 128);
+            } else if (actor instanceof AsteroidSmall) {
+                status = ship.checkSurrounding(ship, actor, 64);
+            }
+            if (status == true) {
+                ship.crash();
+                break;
+            }
         }
 
         /* render images */

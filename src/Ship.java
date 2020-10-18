@@ -1,9 +1,9 @@
 import bagel.Image;
 
 public class Ship {
-    private static final String THREE_LIFE_FILE = "res/images/3Life.png";
-    private static final String TWO_LIFE_FILE = "res/images/2Life.png";
-    private static final String ONE_LIFE_FILE = "res/images/1Life.png";
+    private static final String THREE_LIFE_FILE = "res/image/3spacebunnies.png";
+    private static final String TWO_LIFE_FILE = "res/image/2spacebunnies.png";
+    private static final String ONE_LIFE_FILE = "res/image/1spacebunnies.png";
     private static final int THREE_LIFE= 3;
     private static final int TWO_LIFE = 2;
     private static final int ONE_LIFE = 1;
@@ -16,13 +16,34 @@ public class Ship {
     public Ship() {
         x = 0;
         y = 348;
-        image = new Image("res/image/ufo.png");
+        image = new Image(THREE_LIFE_FILE);
         condition = THREE_LIFE;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public Boolean checkSurrounding(Ship ship, Actor asteroid, int range) {
+        if ((ship.getX() == asteroid.getX()) || (ship.getY() == asteroid.getY())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /* when crash bunny ejected one out */
     public void crash() {
         condition = condition-1;
+        if (condition == TWO_LIFE) {
+            image = new Image(TWO_LIFE_FILE);
+        } else if (condition == ONE_LIFE) {
+            image = new Image(ONE_LIFE_FILE);
+        }
     }
 
     public void shift() {

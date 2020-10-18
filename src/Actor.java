@@ -14,13 +14,16 @@ public class Actor {
         this.TYPE = type;
     }
 
-    /* setter to change image */
-    public void setImage(String fileName) {
-        this.image = new Image(fileName);
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public void shift() {
-        x = x - RocketBunny.PER_PIXEL;
+        x -= RocketBunny.PER_PIXEL;
     }
 
     public void render() {
