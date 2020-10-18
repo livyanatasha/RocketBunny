@@ -1,4 +1,4 @@
-# RocketBunny
+# Space Bunnies 🐰🌌
 
 Background story :
 Bibbly and his bunny friends wish to travel to planet carrotton in hopes of finding a better life, one where the carrots are bountiful. 
