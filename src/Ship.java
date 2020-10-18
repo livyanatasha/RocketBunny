@@ -13,15 +13,28 @@ public class Ship {
     private int y;
 
     /* constructor to initialize value */
-    public Ship(int x, int y) {
-        this.x = x;
-        this.y = y;
-        image = new Image(THREE_LIFE_FILE);
+    public Ship() {
+        x = 0;
+        y = 348;
+        image = new Image("res/image/ufo.png");
         condition = THREE_LIFE;
     }
 
     /* when crash bunny ejected one out */
     public void crash() {
         condition = condition-1;
+    }
+
+    public void shift() {
+        x = x + RocketBunny.PER_PIXEL;
+    }
+
+    public void move(int x, int y) {
+        this.x += x;
+        this.y += y;
+    }
+
+    public void render() {
+        image.draw(x,y);
     }
 }

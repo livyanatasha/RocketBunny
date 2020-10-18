@@ -10,15 +10,13 @@ public class AsteroidLarge extends Actor{
 
     public static String typeFileLarge() {
         Random rand = new Random();
-        int numAsteroid = rand.nextInt(3);
+        int numAsteroid = rand.nextInt(2);
         String fileName;
         switch (numAsteroid) {
             case (0):
-                fileName = "res/image/asteroid_large1";
-            case (1):
-                fileName = "res/image/asteroid_large2";
+                fileName = "res/image/asteroid_large1.png";
             default:
-                fileName = "res/image/asteroid_large3";
+                fileName = "res/image/asteroid_large2.png";
         }
         return fileName;
     }

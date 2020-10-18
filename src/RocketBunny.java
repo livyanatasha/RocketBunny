@@ -5,12 +5,18 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.System.currentTimeMillis;
+
 public class RocketBunny extends AbstractGame {
-    public static final int SPEED_PER_PIXEL = 1;
+    public static final int PER_PIXEL = 64;
     private final List<Actor> actorList = new ArrayList<>();
+    private Ship ship = new Ship();
+    private int tickRate = 500;
+    private int tick = 0;
+    private Image background = new Image("res/image/galaxyPlanet.png");
 
     public RocketBunny() {
-        super(1024, 768, "Rockey Bunny");
+        super(1024, 768, "Rocket Bunny");
         loadMap();
         intro();
     }
@@ -20,11 +26,11 @@ public class RocketBunny extends AbstractGame {
     }
 
     public void loadMap() {
-        String mapFile = "res/map/map.csv";
+        String mapFile = "res/map/spacebunnies.csv";
 
         /* try through the csv file */
         try (BufferedReader worldReader =
-                     new BufferedReader(new FileReader("res/worlds/test.csv"))) {
+                     new BufferedReader(new FileReader(mapFile))) {
             String row;
 
             /* going through every line in the csv file */
@@ -41,15 +47,20 @@ public class RocketBunny extends AbstractGame {
                     case AsteroidLarge.TYPE:
                         file = AsteroidLarge.typeFileLarge();
                         actorInput = new AsteroidLarge(x,y, file);
+                        break;
                     case AsteroidSmall.TYPE:
                         file = AsteroidSmall.typeFileSmall();
                         actorInput = new AsteroidLarge(x,y, file);
+                        break;
                     case Background.TYPE:
                         actorInput = new Background();
+                        break;
                     case StartPlanet.TYPE:
                         actorInput = new StartPlanet();
+                        break;
                     case EndPlanet.TYPE:
                         actorInput = new EndPlanet();
+                        break;
                 }
                 actorList.add(actorInput);
             }
@@ -61,7 +72,20 @@ public class RocketBunny extends AbstractGame {
     }
 
     public void intro() {
+        for (int i=0; i<4; i++) {
+            long timeBegin = currentTimeMillis();
+            while (tickRate != (currentTimeMillis() - timeBegin));
+            for (Actor actor : actorList) {
+                actor.shift();
+            }
+            ship.shift();
 
+            /* render images */
+            for (Actor actor : actorList) {
+                actor.render();
+            }
+            ship.render();
+        }
     }
 
     public void finale() {
@@ -74,12 +98,25 @@ public class RocketBunny extends AbstractGame {
         if (input.wasPressed(Keys.ESCAPE)) {
             Window.close();
         } else if (input.wasPressed(Keys.UP)) {
-
+            ship.move(0, -PER_PIXEL);
         } else if (input.wasPressed(Keys.DOWN)) {
+            ship.move(0, PER_PIXEL);
+        }
 
+        long timeBegin = currentTimeMillis();
+        while (tickRate != (currentTimeMillis() - timeBegin));
+        
+        /* move actors */
+        for (Actor actor : actorList) {
+            actor.shift();
         }
 
         /* render images */
+        for (Actor actor : actorList) {
+            actor.render();
+        }
+        ship.render();
 
+        tick++;
     }
 }
