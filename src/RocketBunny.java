@@ -1,4 +1,5 @@
 import bagel.*;
+import org.lwjgl.system.CallbackI;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,11 +11,11 @@ import static java.lang.System.currentTimeMillis;
 public class RocketBunny extends AbstractGame {
     public static final int PER_PIXEL = 64;
     private final List<Actor> actorList = new ArrayList<>();
-    private Ship ship = new Ship();
-    private int tickRate = 500;
-    private int tick = 0;
-    private Image background = new Image("res/image/galaxyPlanet.png");
+    private final Ship ship = new Ship();
+    private final int tickRate = 500;
     private long lastUpdateMills = 0;
+    private Boolean wasHit = false;
+    private final Font word = new Font("res/8-BIT WONDER.TTF", 500);
 
     public RocketBunny() {
         super(1024, 768, "Rocket Bunny");
@@ -43,7 +44,7 @@ public class RocketBunny extends AbstractGame {
 
                 /* insert the input to the list */
                 Actor actorInput = null;
-                String file = null;
+                String file;
                 switch (name) {
                     case AsteroidLarge.TYPE:
                         file = AsteroidLarge.typeFileLarge();
@@ -96,6 +97,7 @@ public class RocketBunny extends AbstractGame {
     @Override
     protected void update(Input input) {
         Boolean status = false;
+
         /* check input and move accordingly */
         if (input.wasPressed(Keys.ESCAPE)) {
             Window.close();
@@ -113,19 +115,38 @@ public class RocketBunny extends AbstractGame {
                 actor.shift();
             }
             lastUpdateMills = thisUpdateMills;
+
+
+            /* check if hit asteroid */
+            for (Actor actor : actorList) {
+                if (actor instanceof AsteroidLarge) {
+                    status = ship.checkSurrounding(ship, actor, 64);
+                } else if (actor instanceof AsteroidSmall) {
+                    status = ship.checkSurrounding(ship, actor, 32);
+                } else {
+                    status = false;
+                }
+
+                if (status) {
+                    break;
+                }
+            }
+
+            /* update the status */
+            if (status) {
+                if (wasHit == false) {
+                    ship.crash();
+                    wasHit = true;
+                }
+            } else {
+                if (wasHit) {
+                    wasHit = false;
+                }
+            }
         }
 
-        /* check if hit asteroid */
-        for (Actor actor : actorList) {
-            if (actor instanceof AsteroidLarge) {
-                status = ship.checkSurrounding(ship, actor, 128);
-            } else if (actor instanceof AsteroidSmall) {
-                status = ship.checkSurrounding(ship, actor, 64);
-            }
-            if (status == true) {
-                ship.crash();
-                break;
-            }
+        if (ship.getCondition() == 0) {
+            word.drawString("The end", 0, 0);
         }
 
         /* render images */
@@ -134,6 +155,5 @@ public class RocketBunny extends AbstractGame {
         }
         ship.render();
 
-        tick++;
     }
 }
